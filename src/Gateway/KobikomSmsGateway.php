@@ -13,7 +13,7 @@ class KobikomSmsGateway implements SmsGateway
 
     public function __construct(array $config)
     {
-        $base_uri = rtrim($config['api'], '/').'/multiple?action=send-sms&api_key='.$config['apiKey'];
+        $base_uri = rtrim($config['api'], '/');
         $this->config = $config;
         $this->client = new Client([
             'base_uri' => $base_uri,
@@ -33,16 +33,8 @@ class KobikomSmsGateway implements SmsGateway
      */
     public function send($title, $message, array $receivers, $type = null): string
     {
-        $body = [];
-        foreach($receivers as $receiver) {
-            $body[] = [
-                'to' => $receiver,
-                'from' => $this->config['from'],
-                'sms' => $message,
-            ];
-        }
-        $response = $this->client->request('POST', '', [
-            'body' => json_encode($body, JSON_THROW_ON_ERROR),
+        $response = $this->client->request('GET', '',[
+            'query' => ['to' => $receivers[0], 'from' => $this->config['from'], 'sms' => $message,'action' => 'send-sms','api_key' => $this->config['apiKey']],
         ]);
         return $response->getBody()->getContents();
     }
