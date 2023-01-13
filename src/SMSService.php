@@ -12,11 +12,11 @@ class SMSService
 
     protected function getGateway($phoneNumber)
     {
-        $defaultGateway = config('laravel-multi-sms-provider.default');
+        $defaultGateway = config('laravel-multigw-sms-provider.default');
         if (!$defaultGateway) {
             throw new \RuntimeException('No default gateway is set');
         }
-        $gateways = config('laravel-multi-sms-provider.gateways');
+        $gateways = config('laravel-multigw-sms-provider.gateways');
         $gatewayConfig = $gateways[$defaultGateway];
         foreach ($gateways as $key => $value) {
             if ($value['regex'] && preg_match($value['regex'], $phoneNumber)) {
