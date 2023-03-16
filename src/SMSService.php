@@ -71,12 +71,6 @@ class SMSService
         foreach ($gateways as $recipients) {
             $gateway = $this->getGateway($recipients[0]);
             $resp = $gateway->send($this->title, $this->message, $recipients, $this->type);
-            if($resp === 'false'){
-                $defaultGateway = config('laravel-multigw-sms-provider.default');
-                $gatewayConfig = $gateways[$defaultGateway];
-                $gateway = new $gatewayConfig['class']($gatewayConfig);
-                $gateway->send($this->title, $this->message, $recipients, $this->type);
-            }
         }
     }
 }
