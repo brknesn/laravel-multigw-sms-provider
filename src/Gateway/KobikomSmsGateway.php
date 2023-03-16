@@ -36,9 +36,9 @@ class KobikomSmsGateway implements SmsGateway
         $response = $this->client->request('GET', '',[
             'query' => ['to' => $receivers[0], 'from' => $this->config['from'], 'sms' => $message,'action' => 'send-sms','api_key' => $this->config['apiKey']],
         ]);
-        $response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $response = json_decode($response->getBody()->getContents(),true);
         if($response['code'] !== 'ok'){
-            throw new \Exception($response['message']);
+            return "false";
         }
         return $response->getBody()->getContents();
     }
