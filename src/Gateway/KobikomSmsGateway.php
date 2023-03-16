@@ -27,12 +27,19 @@ class KobikomSmsGateway implements SmsGateway
     public function getName() : string {
         return 'kobikom';
     }
-   
-     public function send($title, $message, array $receivers, $type = null): string
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+     public function send($title, $message, array $receivers, $type = null)
     {
         $response = $this->client->request('GET', '',[
             'query' => ['to' => $receivers[0], 'from' => $this->config['from'], 'sms' => $message,'action' => 'send-sms','api_key' => $this->config['apiKey']],
         ]);
-        return $response->getBody()->getContents();
+        $response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        if($response['code'] !== 'ok'){
+            throw new \Exception($response['message']);
+        }
+        return $response;
     }
 }
