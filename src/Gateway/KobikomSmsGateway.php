@@ -31,7 +31,7 @@ class KobikomSmsGateway implements SmsGateway
      * @throws GuzzleException
      * @throws \JsonException
      */
-     public function send($title, $message, array $receivers, $type = null)
+     public function send($title, $message, array $receivers, $type = null): string
     {
         $response = $this->client->request('GET', '',[
             'query' => ['to' => $receivers[0], 'from' => $this->config['from'], 'sms' => $message,'action' => 'send-sms','api_key' => $this->config['apiKey']],
@@ -40,6 +40,6 @@ class KobikomSmsGateway implements SmsGateway
         if($response['code'] !== 'ok'){
             throw new \Exception($response['message']);
         }
-        return $response;
+        return $response->getBody()->getContents();
     }
 }
