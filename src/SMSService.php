@@ -74,6 +74,7 @@ class SMSService
                 $gateway->send($this->title, $this->message, $recipients, $this->type);
             }catch (\Exception $e) {
                 $defaultGateway = config('laravel-multigw-sms-provider.default');
+                $gateways = config('laravel-multigw-sms-provider.gateways');
                 $gatewayConfig = $gateways[$defaultGateway];
                 $gateway = new $gatewayConfig['class']($gatewayConfig);
                 $gateway->send($this->title, $this->message, $recipients, $this->type);
